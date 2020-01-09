@@ -173,7 +173,7 @@ class HouseholdObjectsDataset(utils.Dataset):
             # Get indexes of pixels inside the polygon and set them to 1
             rr, cc = skimage.draw.polygon(p['all_points_y'], p['all_points_x'])
             mask[rr, cc, i] = 1
-            instance_class_ids[i] = self.map_class_ids[info['instance_class']['name']]
+            instance_class_ids[i] = self.map_class_ids[info['instance_class'][0]['name']]
 
         # Return mask, and array of class IDs of each instance. Since we have
         # one class ID only, we return an array of 1s
