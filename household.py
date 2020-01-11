@@ -207,8 +207,14 @@ def train(model):
     print("Training network heads")
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE,
-                epochs=10,
+                epochs=5,
                 layers='heads')
+    model_json = model.to_json()
+    with open("model.json", "w") as json_file:
+        json_file.write(model_json)
+    model.save_weights("model_weights_ho.h5")
+
+    print("Saved model and model weights to disk")
 
 def detect(model, image_path=None, video_path=None):
     assert image_path or video_path
