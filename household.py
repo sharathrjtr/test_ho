@@ -71,10 +71,10 @@ class HouseholdObjectsConfig(Config):
     NUM_CLASSES = 1 + 8  # Background + household_objects
 
     # Number of training steps per epoch
-    STEPS_PER_EPOCH = 100
+    STEPS_PER_EPOCH = 5000
 
-    # Skip detections with < 90% confidence
-    DETECTION_MIN_CONFIDENCE = 0.9
+    # Skip detections with < 75% confidence
+    DETECTION_MIN_CONFIDENCE = 0.75
 
 
 ############################################################
@@ -208,7 +208,7 @@ def train(model):
     print("Training network heads")
     model.train(dataset_train, dataset_val,
                 learning_rate=config.LEARNING_RATE,
-                epochs=5,
+                epochs=20,
                 layers='heads')
 
 def detect(model, image_path=None, video_path=None):
