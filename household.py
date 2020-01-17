@@ -49,7 +49,8 @@ COCO_WEIGHTS_PATH = os.path.join(ROOT_DIR, "mask_rcnn_coco.h5")
 # Directory to save logs and model checkpoints, if not provided
 # through the command line argument --logs
 DEFAULT_LOGS_DIR = os.path.join(ROOT_DIR, "logs")
-CLASS_NAMES = ['BG', 'nivea_body_lotion', 'mont_blanc_perfume']
+CLASS_NAMES = ['BG', 'pet_bottle', 'nivea_body_lotion', 'mont_blanc_legend_spirit', 'vicks_vaporub', 'himalaya_diarex',
+               'pringles_original', 'pantene_shampoo', 'biore_mens_foam']
 ############################################################
 #  Configurations
 ############################################################
@@ -67,7 +68,7 @@ class HouseholdObjectsConfig(Config):
     IMAGES_PER_GPU = 2
 
     # Number of classes (including background)
-    NUM_CLASSES = 1 + 2  # Background + household_objects
+    NUM_CLASSES = 1 + 8  # Background + household_objects
 
     # Number of training steps per epoch
     STEPS_PER_EPOCH = 100
@@ -88,16 +89,16 @@ class HouseholdObjectsDataset(utils.Dataset):
         subset: Subset to load: train or val
         """
         # Add classes. We have only one class to add.
-        self.add_class("household_objects", 1, "nivea_body_lotion")
-        self.add_class("household_objects", 2, "mont_blanc_perfume")
-        # self.add_class("pet_bottle", 1, "pet_bottle")
-        # self.add_class("pet_bottle", 1, "pet_bottle")
-        # self.add_class("pet_bottle", 1, "pet_bottle")
-        # self.add_class("pet_bottle", 1, "pet_bottle")
-        # self.add_class("pet_bottle", 1, "pet_bottle")
-        # self.add_class("pet_bottle", 1, "pet_bottle")
-        self.map_class_ids = {"nivea_body_lotion": 1, "mont_blanc_perfume": 2}
-
+        self.add_class("household_objects", 1, "pet_bottle")
+        self.add_class("household_objects", 2, "nivea_body_lotion")
+        self.add_class("household_objects", 3, "mont_blanc_legend_spirit")
+        self.add_class("household_objects", 4, "vicks_vaporub")
+        self.add_class("household_objects", 5, "himalaya_diarex")
+        self.add_class("household_objects", 6, "pringles_original")
+        self.add_class("household_objects", 7, "pantene_shampoo")
+        self.add_class("household_objects", 8, "biore_mens_foam")
+        self.map_class_ids = {"pet_bottle": 1, "nivea_body_lotion": 2, "mont_blanc_perfume": 3, "vicks_vaporub": 4,
+                              "himalaya_diarex": 5, "pringles_original": 6, "pantene_shampoo":7, "biore_mens_foam": 8}
         # Train or validation dataset?
         assert subset in ["train", "val"]
         dataset_dir = os.path.join(dataset_dir, subset)
@@ -153,7 +154,7 @@ class HouseholdObjectsDataset(utils.Dataset):
 
     def load_mask(self, image_id):
         """Generate instance masks for an image.
-       Returns:
+        Returns:
         masks: A bool array of shape [height, width, instance count] with
             one mask per instance.
         class_ids: a 1D array of class IDs of the instance masks.
@@ -215,7 +216,6 @@ def detect(model, image_path=None, video_path=None):
 
     # Image or video?
     if image_path:
-        # Run model detection and generate the color splash effect
         print("Running on {}".format(args.image))
         # Read image
         image = skimage.io.imread(args.image)
@@ -272,7 +272,7 @@ if __name__ == '__main__':
         description='Train Mask R-CNN to detect household objects.')
     parser.add_argument("command",
                         metavar="<command>",
-                        help="'train' or 'splash'")
+                        help="'train' or 'test'")
     parser.add_argument('--dataset', required=False,
                         metavar="/path/to/household_objects/dataset/",
                         help='Directory of the household_objects dataset')
@@ -285,10 +285,10 @@ if __name__ == '__main__':
                         help='Logs and checkpoints directory (default=logs/)')
     parser.add_argument('--image', required=False,
                         metavar="path or URL to image",
-                        help='Image to apply the color splash effect on')
+                        help='Image to detect')
     parser.add_argument('--video', required=False,
                         metavar="path or URL to video",
-                        help='Video to apply the color splash effect on')
+                        help='Video to perform detection')
     args = parser.parse_args()
 
     # Validate arguments
