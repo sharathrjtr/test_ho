@@ -97,7 +97,7 @@ class HouseholdObjectsDataset(utils.Dataset):
         self.add_class("household_objects", 6, "pringles_original")
         self.add_class("household_objects", 7, "pantene_shampoo")
         self.add_class("household_objects", 8, "biore_mens_foam")
-        self.map_class_ids = {"pet_bottle": 1, "nivea_body_lotion": 2, "mont_blanc_perfume": 3, "vicks_vaporub": 4,
+        self.map_class_ids = {"pet_bottle": 1, "nivea_body_lotion": 2, "mont_blanc_legend_spirit": 3, "vicks_vaporub": 4,
                               "himalaya_diarex": 5, "pringles_original": 6, "pantene_shampoo":7, "biore_mens_foam": 8}
         # Train or validation dataset?
         assert subset in ["train", "val"]
